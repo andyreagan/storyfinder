@@ -1,0 +1,10 @@
+for each city
+
+# grab the tweet ID's, store in a temp file
+mysql -u mrfrank -pREDACTED_PASSWORD -h REDACTED_DBHOST -e "use MRFRANK_13; 
+SELECT fkTweetID
+FROM tblTweetCity
+WHERE fkCity LIKE '${tmpCity}';" > tmp_${tmpCity}.txt
+
+# go download the text for those ID's
+

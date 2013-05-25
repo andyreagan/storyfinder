@@ -1,0 +1,52 @@
+#!/bin/bash
+
+cd /Users/storyfinder/code
+
+# subtract two from the current hour
+newhour=19
+newdate=18.04.13
+minute=59
+
+
+FILE=/Users/storyfinder/code/dontopen.txt
+
+# copy down just that hour
+rsync -avz areagan@REDACTED_HOST:/users/c/d/cdanfort/Data/twitter/tweet-troll/raw/$newdate/twitter.*.$newhour.$newdate.json /users/storyfinder/data/$newdate/
+
+# parse them to text
+python parse-most-recent-hour-to-txt.py $newhour $newdate $minute > /users/storyfinder/data/$newdate/$newhour_log.txt
+
+# delete that hour of json
+#\rm /users/storyfinder/data/$newdate/twitter.*.$newhour.$newdate.json
+
+cd $HOME/code/perls/ratelist_partitioner_storyFinder/
+
+perl storyFinder.pl "/users/storyfinder/data/$newdate/$newhour.txt" "/users/storyfinder/data/RefEntropy.csv" "/users/storyfinder/data/RefValence.csv" "/users/storyfinder/data/$newdate/$newhour"
+perl writeRscript.pl "$newdate" "$newhour" "$minute"
+Rscript /users/storyfinder/code/R/run_storyfinder.R
+
+cd $HOME/code/
+
+# matlab geo stuff, worry about next
+
+##  # where the geo tweets are
+##  FILENAME="/users/storyfinder/data/${newdate}/${newhour}_geo.txt"
+##  export FILENAME
+##  
+##  # cities and message ID, printed to by MATLAB
+##  FILENAME2="/users/storyfinder/data/${newdate}/${newhour}_geo_locations.txt"
+##  export FILENAME2
+##  
+##  # where the corresponding text is stored
+##  FILENAME3="/users/storyfinder/data/${newdate}/${newhour}_geotxt.txt"
+##  export FILENAME3
+##  
+##  matlab -nodesktop -nosplash -r placeTweets
+##  
+##  cp ${FILENAME2} "/users/storyfinder/data/tmp_geo.csv"
+##  
+##  perl5.16 populateMYSQL.pl
+##  
+##  cp /users/storyfinder/data/tmp_geo{,${newhour}.${newdate}}.csv
+##  
+##  \rm "/users/storyfinder/data/tmp_geo.csv"

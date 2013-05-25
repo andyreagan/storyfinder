@@ -1,0 +1,52 @@
+#!/bin/bash
+
+cd /Users/storyfinder/code
+
+# subtract two from the current hour
+newhour=$(python pydate.py $(date +%H.%d.%m.%y) 2 0 h)
+newdate=$(python pydate.py $(date +%H.%d.%m.%y) 2 0 d)
+
+echo "running for newdate,newhour,CRONRUNTIME:"
+echo $newhour
+echo $newdate
+echo $CRONRUNTIME
+
+FILE=/Users/storyfinder/code/dontopen.txt
+
+# parse them to text
+python parse-most-recent-hour-to-txt.py $newhour $newdate $CRONRUNTIME 
+
+# > /users/storyfinder/data/$newdate/$newhour_log.txt
+
+cd $HOME/code/perls/ratelist_partitioner_storyFinder_newDiffs/
+
+perl storyFinder.pl "/users/storyfinder/data/$newdate/$newhour.$CRONRUNTIME.txt" "/users/storyfinder/data/RefEntropy.csv" "/users/storyfinder/data/RefValence.csv" "/users/storyfinder/data/$newdate/$newhour.$CRONRUNTIME"
+perl writeRscript.pl "$newdate" "$newhour" "$CRONRUNTIME"
+Rscript /users/storyfinder/code/R/run_storyfinder.R
+Rscript /users/storyfinder/code/R/plotOutlierChannels_storyFinder.R
+
+#cd $HOME/code/
+
+# matlab geo stuff, worry about next
+
+#  # where the geo tweets are
+#  FILENAME="/users/storyfinder/data/${newdate}/${newhour}_geo.txt"
+#  export FILENAME
+#  
+#  # cities and message ID, printed to by MATLAB
+#  FILENAME2="/users/storyfinder/data/${newdate}/${newhour}_geo_locations.txt"
+#  export FILENAME2
+#  
+#  # where the corresponding text is stored
+#  FILENAME3="/users/storyfinder/data/${newdate}/${newhour}_geotxt.txt"
+#  export FILENAME3
+#  
+#  matlab -nodesktop -nosplash -r placeTweets
+#  
+#  cp ${FILENAME2} "/users/storyfinder/data/tmp_geo.csv"
+#  
+#  perl5.16 populateMYSQL.pl
+#  
+#  cp /users/storyfinder/data/tmp_geo{,${newhour}.${newdate}}.csv
+#  
+#  \rm "/users/storyfinder/data/tmp_geo.csv"

@@ -1,0 +1,35 @@
+#!/bin/bash
+
+cd /Users/storyfinder/code
+
+date="13.04.13"
+for i in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+do
+  for j in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59
+  do
+    echo twitter.$j.$i.$date.json
+    scp areagan@REDACTED_HOST:/users/c/d/cdanfort/Data/twitter/tweet-troll/raw/$date/twitter.$j.$i.$date.json /Users/storyfinder/data/${date}/
+    python parse_from_to.py /Users/storyfinder/data/${date}/twitter.$j.$i.${date}.json /Users/storyfinder/data/${date}/$j.$i.${date}.txt
+    \rm /Users/storyfinder/data/${date}/twitter.$j.$i.${date}.json
+  done
+done
+
+cd /Users/storyfinder/data/${date}/
+
+for i in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+do
+  cat {00,01,02,03,04,05,06,07,08,09,10,11,12,13,14}.$i.$date.txt > $i.14.txt
+  cat {15,16,17,18,19,20,21,22,23,24,25,26,27,28,29}.$i.$date.txt > $i.29.txt
+  cat {30,31,32,33,34,35,36,37,38,39,40,41,42,43,44}.$i.$date.txt > $i.44.txt
+  cat {45,46,47,48,49,50,51,52,53,54,55,56,57,58,59}.$i.$date.txt > $i.59.txt
+  for j in 14 29 44 59
+  do
+    perl /Users/storyfinder/code/perls/ratelist_partitioner_storyFinder/text2clauses.pl "/Users/storyfinder/data/${date}/$i.$j.txt" "/Users/storyfinder/data/${date}/${i}.${j}_clauses.csv"
+    perl /Users/storyfinder/code/perls/ratelist_partitioner_storyFinder/clauses2ratelist.pl "/Users/storyfinder/data/${date}/${i}.${j}_clauses.csv" "/Users/storyfinder/data/${date}/${i}.${j}_full.csv" "10"
+    perl /Users/storyfinder/code/perls/ratelist_partitioner_storyFinder/partitionclauses_ratelist_keepClause.pl "/Users/storyfinder/data/${date}/${i}.${j}_full.csv" "/Users/storyfinder/data/${date}/${i}.${j}_clauses.csv" "/Users/storyfinder/data/${date}/${i}.${j}_rawPartition.txt" "/Users/storyfinder/data/${date}/${i}.${j}_counted.csv"
+    for k in 000 025 050 075 100 125 150 175 200
+    do
+      perl /Users/storyfinder/code/perls/ratelist_partitioner_storyFinder/ambientWordBags.pl "/Users/storyfinder/data/${date}/${i}.${j}_rawPartition.txt" "/Users/storyfinder/code/perls/ratelist_partitioner_storyFinder/labMTfiles/labMT1_${k}.txt" "/Users/storyfinder/data/${date}/${i}.${j}_wordBags_${k}.txt" "/Users/storyfinder/data/${date}/${i}.${j}_valence_${k}.csv"
+    done
+  done
+done

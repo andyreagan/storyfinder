@@ -1,0 +1,35 @@
+#!/bin/bash
+
+cd /Users/storyfinder/code
+
+# $(python pydate.py $(date +%H.%d.%m.%y) 5 3 h)
+
+echo "beginning downlaod at" $(date)
+
+echo "downloading date" $(python pydate.py $(date +%H.%d.%m.%y) 0 0 d) "hour" $(python pydate.py $(date +%H.%d.%m.%y) 0 0 h)
+
+# get the most recent four hours
+rsync -avz areagan@REDACTED_HOST:/users/c/d/cdanfort/Data/twitter/tweet-troll/raw/$(python pydate.py $(date +%H.%d.%m.%y) 0 0 d)/twitter.*.$(python pydate.py $(date +%H.%d.%m.%y) 0 0 h).$(python pydate.py $(date +%H.%d.%m.%y) 0 0 d).json /users/storyfinder/data/$(python pydate.py $(date +%H.%d.%m.%y) 0 0 d)/
+
+echo "downloading date" $(python pydate.py $(date +%H.%d.%m.%y) 1 0 d) "hour" $(python pydate.py $(date +%H.%d.%m.%y) 1 0 h)
+
+rsync -avz areagan@REDACTED_HOST:/users/c/d/cdanfort/Data/twitter/tweet-troll/raw/$(python pydate.py $(date +%H.%d.%m.%y) 1 0 d)/twitter.*.$(python pydate.py $(date +%H.%d.%m.%y) 1 0 h).$(python pydate.py $(date +%H.%d.%m.%y) 1 0 d).json /users/storyfinder/data/$(python pydate.py $(date +%H.%d.%m.%y) 1 0 d)/
+
+echo "downloading date" $(python pydate.py $(date +%H.%d.%m.%y) 2 0 d) "hour" $(python pydate.py $(date +%H.%d.%m.%y) 2 0 h)
+
+rsync -avz areagan@REDACTED_HOST:/users/c/d/cdanfort/Data/twitter/tweet-troll/raw/$(python pydate.py $(date +%H.%d.%m.%y) 2 0 d)/twitter.*.$(python pydate.py $(date +%H.%d.%m.%y) 2 0 h).$(python pydate.py $(date +%H.%d.%m.%y) 2 0 d).json /users/storyfinder/data/$(python pydate.py $(date +%H.%d.%m.%y) 2 0 d)/
+
+echo "downloading date" $(python pydate.py $(date +%H.%d.%m.%y) 3 0 d) "hour" $(python pydate.py $(date +%H.%d.%m.%y) 3 0 h)
+
+rsync -avz areagan@REDACTED_HOST:/users/c/d/cdanfort/Data/twitter/tweet-troll/raw/$(python pydate.py $(date +%H.%d.%m.%y) 3 0 d)/twitter.*.$(python pydate.py $(date +%H.%d.%m.%y) 3 0 h).$(python pydate.py $(date +%H.%d.%m.%y) 3 0 d).json /users/storyfinder/data/$(python pydate.py $(date +%H.%d.%m.%y) 3 0 d)/
+
+echo "deleting date" $(python pydate.py $(date +%H.%d.%m.%y) 4 0 d) "hour" $(python pydate.py $(date +%H.%d.%m.%y) 4 0 h)
+
+# remove the fifth hour
+\rm /users/storyfinder/data/$(python pydate.py $(date +%H.%d.%m.%y) 4 0 d)/twitter.*.$(python pydate.py $(date +%H.%d.%m.%y) 4 0 h).$(python pydate.py $(date +%H.%d.%m.%y) 4 0 d).json
+
+echo "finished running at' $(date)
+
+echo "there are" $(ls *.json | wc -l) "json files"
+
+echo $(ls)

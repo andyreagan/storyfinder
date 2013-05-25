@@ -1,0 +1,14 @@
+#!/bin/bash
+
+newdate=15.04.13
+
+cd $HOME/code/perls/ratelist_partitioner_storyFinder/
+
+for newhour in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+do
+
+perl storyFinder.pl "/users/storyfinder/data/$newdate/$newhour.txt" "/users/storyfinder/data/RefEntropy.csv" "/users/storyfinder/data/RefValence.csv" "/users/storyfinder/data/$newdate/$newhour"
+perl writeRscript.pl "$newdate" "$newhour"
+Rscript /users/storyfinder/code/R/run_storyfinder.R
+
+done
