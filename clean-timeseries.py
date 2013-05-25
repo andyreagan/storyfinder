@@ -7,8 +7,8 @@ vals = ['000','025','050','075','100','125','150','175','200']
 def main():
   for val in vals:
     # write the filenames
-    tmpin = 'Boston_Valence_Seires_' + val + '.txt'
-    tmpout = 'Boston_Valence_Seires_' + val + '_clean.txt'
+    tmpin = '../data/Boston_Valence_Seires_' + val + '.txt'
+    tmpout = '../data/Boston_Valence_Seires_' + val + '_clean.txt'
 
     # take the timeseries into a big list
     f = open(tmpin,'r')
