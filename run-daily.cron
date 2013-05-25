@@ -1,0 +1,11 @@
+#!/bin/bash
+#
+# this script run every day at 12:04AM
+
+# need the path variable (not defined in cron)
+export PATH=/Library/Frameworks/Python.framework/Versions/2.7/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin
+
+# change to directory of run script
+cd /users/storyfinder/code
+
+# ./run1Day.script

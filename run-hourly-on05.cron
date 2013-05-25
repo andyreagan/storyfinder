@@ -1,0 +1,10 @@
+# need the path variable (not defined in cron)
+PATH="/opt/local/bin:/opt/local/sbin:/opt/local/bin:/opt/local/sbin:/Library/Frameworks/Python.framework/Versions/2.7/bin:/Applications/MATLAB_R2013a.app/bin:/Library/Frameworks/Python.framework/Versions/2.7/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin"
+export PATH
+# /Library/Frameworks/Python.framework/Versions/2.7/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin
+
+CRONRUNTIME="14"
+export CRONRUNTIME 
+
+# run it
+/Users/storyfinder/code/run.script
