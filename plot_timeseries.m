@@ -9,7 +9,7 @@
 %% set(gcf,'color','none');
 tmpfigh = gcf;
 clf;
-figshape(600,800);
+%figshape(600,800);
 
 tmpfilename = 'presidents';
 
@@ -46,7 +46,7 @@ valence_h = {'000','025','050','075','100','125','150','175','200'};
 
 for i=1:length(valence_h)
     
-    tmp = sprintf('Boston_Valence_Seires_%s_clean.txt',valence_h{i});
+    tmp = sprintf('../data/Boston_Valence_Seires_%s_clean.txt',valence_h{i});
 
     data = load(tmp);
     
@@ -59,7 +59,7 @@ for i=1:length(valence_h)
     line = plot(1:length(data(:,1)),data(:,1),'Color',tmpcol{mod(i,6)+1},'LineWidth',2);
     hold on
     
-    tmph(i) = plot(1:length(data(:,1)),data(:,1),'Marker',tmpsym{mod(i,6)+1},'MarkerFaceColor',tmpcol{mod(i,6)+1},'LineStyle','none');
+    %tmph(i) = plot(1:length(data(1:3:end,1)),data(1:3:end,1),'Marker',tmpsym{mod(i,6)+1},'MarkerFaceColor',tmpcol{mod(i,6)+1},'LineStyle','none');
 end
 
 
@@ -72,19 +72,19 @@ set(tmplegend,'FontSize',16);
 legend boxoff
 
 
-psprintcpdf(tmpfilenoname);
+%psprintcpdf(tmpfilenoname);
 
 
-tmpcommand = sprintf('open %s.pdf;',tmpfilenoname); 
-system(tmpcommand);
+%tmpcommand = sprintf('open %s.pdf;',tmpfilenoname); 
+%system(tmpcommand);
 
 % system('epstopdf distribution-comparison001_noname.ps','-echo');
 % system('open distribution-comparison001_noname.pdf');
 
 %% archivify
-figurearchivify(tmpfilenoname);
+%figurearchivify(tmpfilenoname);
 
-close(tmpfigh);
+%close(tmpfigh);
 clear tmp*
 
 

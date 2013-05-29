@@ -9,7 +9,23 @@
 valence_h = {'000','025','050','075','100','125','150','175','200'};
 
 for i=1:length(valence_h)
-    tmp = sprintf('Boston_Valence_Seires_%s_clean.txt',valence_h{i});
+    tmp = sprintf('../data/Boston_Valence_Seires_%s_clean.txt',valence_h{i});
     %data = load(tmp);
-    load(tmp);
+    tmpdata = load(tmp);
+    
+    data(:,i) = tmpdata(:,1);
 end
+
+[corrMat, pvalMat]=corr(data,data,'type','spearman');
+
+% inds=find(pvalMat>.01);
+% corrMat(inds)=0; 
+
+figure;
+pcolor(corrMat);
+colorbar;
+shading interp
+
+% figure;
+% clustergram(corrMat);
+% colorbar; 
