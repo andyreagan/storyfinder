@@ -4,30 +4,31 @@ Alongside these efforts, we seek to use text shared on Twitter to detect any col
 
 \textbf{Partitioning Text:}\\
 
-Before we can analyze the patterns in information being shared, we need to break down large texts into their meaningful units. We rely on a method developed by Williams et al.[citation needed]. First we create a probability distribution of all possible phrases in a text based on frequency of appearance in that text. We then go back and partition the same text using that probability distribution to find the optimal partition of phrases. It is important to note that the probability distribution represents the same text, such that all necessary phrases are included. It is also important to note, that the partitions are completely disjoint and span the entire text. 
+Before any pattern analysis can occur, we need method to transform a large text, or in our case a large volume of tweets, into meaningful units of information. To do this we rely on a method developed by Williams et al.[citation needed]. First we create a probability distribution of all possible phrases in a text based on frequency of appearance in that text. We then go back and partition the same text using that probability distribution to find the optimal partition of phrases. It is important to note that the probability distribution represents the same text, such that all necessary phrases are included. Furthermore the partitions are completely disjoint and span the entire text. 
 
 Are equations/ diagrams needed here?!  
 
 \textbf{Computing Entropy of Phrases}\\
 
-Once we have a partition of meaningful units of language, we can look at the context in which these units appear. We focus on the entropy of a phrase, which is computed within its local context (or clauses) using Shannon's entropy. A plunge in entropy indicates a collapse of language around central topics, indicating a possible story. 
+Once we have a partition of meaningful units, we can look at the context in which these units appear. We focus on the entropy of a phrase, which is computed within its local context (or clauses) using Shannon's entropy. A plunge in entropy indicates a collapse of language around central topics, indicating a possible story. 
 
 For a phrase $p$, let $N_p$ be the count of $p$, let $\{ c_p \}$ be all of the neighborhoods of $p$, let $N_{c_p}$ be the count of neighborhood $c_p$ and then we define the entropy $E_p$ as
 \[ E_p = -\sum _{c_p} N_{c_p} \log _2 \left ( N_p / N_{c_p} \right ) .\]
 It is then necessary to normalize this over the sum of the neighborhoods so that we are getting at the probability of each neighborhood, so we set
 \[ E_p = E_p / \sum _{c_p} N_{c_p} .\]
 
-For a phrase, the value of entropy is limited by the frequency of appearance of the phrase.  Furthermore, since this measure of entropy is conditioned on a reference text, its entropy of a particular phrase is further limited the by length of the reference text. In our case, we compare the current fifteen minutes of tweets to the past fifteen minutes of tweets.  By only using the fifteen minutes prior, we can pick up a diurnal cycle as well as find the shapes of stories. \\
+For a phrase, the value of entropy is limited by the frequency of appearance of the phrase.  Furthermore, since this measure of entropy is conditioned on a reference text, the entropy of a particular phrase is further limited the by length of the reference text. In our case, we compare the current fifteen minutes of tweets to the past fifteen minutes of tweets.  By only using the fifteen minutes prior, we can pick up a diurnal cycle as well as find the shapes of stories. \\
 
 note: do we need to perform experiments to validate the choice of a 15 minute window? 
 
 \textbf{Computing Ambient Valence of Phrases}\\
 
-The LabMT dataset provided by Dodds et. al. \cite{dodds-happiness} contains 10222 words with happiness scores on a 1 to 9 scale, averaged over 50 independent ratings through Mechanical Turk.
-To extend the valence scores on words into scores on phrases, we compute the ambient valence of a phrase $p$ be averaging the scores of all the words surrounding this phrase for which we have scores.
+Another metric we use to find stories is ambient valence. This measure is intended to be capture a more psychological aspect of stories: happiness. Some of the biggest stories we share, are either very sad or very happy, and we hope to measure that using a method developed by Dodds et al [citcation needed]. The LabMT dataset contains 10222 words with happiness scores on a 1 to 9 scale, averaged over 50 independent ratings through Mechanical Turk.To extend the valence scores on words into scores on phrases, we compute the ambient valence of a phrase $p$ be averaging the scores of all the words surrounding this phrase for which we have scores.
 % As was shown by Dodds et. al., this instrument is tunable to the removable of neutral words.
 % We test this tunability on ambient phrase scoring by considering the correlation of the happiness timeseries on Twitter.
 The correlation between valence and ambient valence of words in the LabMT set in Figure \ref{fig:ambwordcor} provides some evidence for the validity of this scoring, showing a positive trend with correlation $\rho = .51$.\\
+
+
 
 \begin{figure}[tpb!]
 \centering
