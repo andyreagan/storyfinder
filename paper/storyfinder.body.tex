@@ -1,4 +1,4 @@
-The advent of the internet brought forth the ability to share information with others in unprecedented time, and advancements in technology, like external storage, have revolutionized our access to knowledge. This nexus of limitless storage and real time capabilities has created a wealth of non-traditional forms of data that are decentralized, social, and crowd sourced. This presents a new challenge of how to store, quantify, and make sense of these new data sources. The democratization of information has culminated today in a dynamic crowd sourced encyclopeida vaster than anything before (Wikipeida.org), and in the social realm, social media sites  Twitter and Facebook have created a wealth of social interaction data. Since sharing in these mediums, is not subject to linguistic of grammatical framework, it reveals organic interactions and highlights topics which matter to individuals. On Twitter, in particular, more voices are being heard than ever before with more than 500 million people generating over 340 million messages per day [citation needed - pew state of the twitter study?]. This data has been leveraged in the past to crush hard problems (FoldIt) [PNAS or science reference] and digitize all books (ReCaptcha) [citation needed] . 
+The advent of the internet brought forth the ability to share information with others in unprecedented time, and advancements in technology, like external storage, have revolutionized our access to knowledge. This nexus of limitless storage and real time capabilities has created a wealth of non-traditional forms of data that are decentralized, social, and crowd sourced. This presents a new challenge of how to store, quantify, and make sense of these new data sources. The democratization of information has culminated today in a dynamic crowd sourced encyclopedia vaster than anything before (Wikipeida.org), and in the social realm, social media sites  Twitter and Facebook have created a wealth of social interaction data. Since sharing in these mediums, is not subject to linguistic or grammatical framework, it reveals organic interactions and highlights topics which matter to individuals. On Twitter, in particular, more voices are being heard than ever before with more than 500 million people generating over 340 million messages per day [citation needed - pew state of the twitter study?]. This data has been leveraged in the past to crush hard problems (FoldIt) [PNAS or science reference] and digitize all books (ReCaptcha) [citation needed] . 
 
 Alongside these efforts, we seek to use text shared on Twitter to detect any collapse in language, or convergence on some particular topic, thereby computationally detecting the stories and topics that are being reported by individual users and shared across the network. Unlike traditionally news websites which fact check, write, rewrite, edit and then report, our news is reported by the people as soon as it is detected. We call this distributed news, and the aggregate tool the 'storyfinder.' After outlining the methods, which include partitioning texts into meaningful units developed by Williams et all [citation], and define our measures of conditional entropy [citation needed] and ambient valence [citation needed], we present the results of the storyfinder for one week of Twitter data surrounding the 2013 Boston Marathon bombings.\\
 
@@ -18,8 +18,6 @@ It is then necessary to normalize this over the sum of the neighborhoods so that
 \[ E_p = E_p / \sum _{c_p} N_{c_p} .\]
 
 For a phrase, the value of entropy is limited by the frequency of appearance of the phrase.  Furthermore, since this measure of entropy is conditioned on a reference text, the entropy of a particular phrase is further limited the by length of the reference text. In our case, we compare the current fifteen minutes of tweets to the past fifteen minutes of tweets.  By only using the fifteen minutes prior, we can pick up a diurnal cycle as well as find the shapes of stories. \\
-
-note: do we need to perform experiments to validate the choice of a 15 minute window? \\
 
 \textbf{Computing Ambient Valence of Phrases}\\
 
@@ -128,7 +126,7 @@ Note the inaccuracies in the data of Figure \ref{fig:timeseries} in the caption,
   \includegraphics[width=\textwidth]{boston4.pdf}
   \caption{
   The same time as \ref{fig:timeseries_boston3}, looking at the 2-grams.
-  The cool thing here is, as I mentioned during my presentation, we pick up ``franklin street'', the location of the shootout, which was at the time classified information.
+  The cool thing here is, we pick up ``franklin street'', the location of the shootout, which was at the time classified information.
   }
   \label{fig:timeseries_boston4}
 \end{figure*}
@@ -137,8 +135,7 @@ Note the inaccuracies in the data of Figure \ref{fig:timeseries} in the caption,
 
 \textbf{Conclusion:}\\
 
-Yet to be determined. 
-
+We show that our story finder is successful in distilling information in a timely manner, when applied to the case study of the Boston Marathon. We find the initial bombing, the names of the suspects, the MIT shooting, even precise locations such as Franklin St. We hope to use this tool as a forecaster of important news, but also as an instrument to study the characteristics of stories. 
 
 
 
