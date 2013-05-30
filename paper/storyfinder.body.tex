@@ -6,7 +6,7 @@ Alongside these efforts, we seek to use text shared on Twitter to detect any col
 
 Before any pattern analysis can occur, we need method to transform a large text, or in our case a large volume of tweets, into meaningful units of information. To do this we rely on a method developed by Williams et al.[citation needed]. First we create a probability distribution of all possible phrases in a text based on frequency of appearance in that text. We then go back and partition the same text using that probability distribution to find the optimal partition of phrases. It is important to note that the probability distribution represents the same text, such that all necessary phrases are included. Furthermore the partitions are completely disjoint and span the entire text. 
 
-Are equations/ diagrams needed here?!  
+Are equations/ diagrams needed here?!  \\
 
 \textbf{Computing Entropy of Phrases}\\
 
@@ -19,11 +19,11 @@ It is then necessary to normalize this over the sum of the neighborhoods so that
 
 For a phrase, the value of entropy is limited by the frequency of appearance of the phrase.  Furthermore, since this measure of entropy is conditioned on a reference text, the entropy of a particular phrase is further limited the by length of the reference text. In our case, we compare the current fifteen minutes of tweets to the past fifteen minutes of tweets.  By only using the fifteen minutes prior, we can pick up a diurnal cycle as well as find the shapes of stories. \\
 
-note: do we need to perform experiments to validate the choice of a 15 minute window? 
+note: do we need to perform experiments to validate the choice of a 15 minute window? \\
 
 \textbf{Computing Ambient Valence of Phrases}\\
 
-Another metric we use to find stories is ambient valence. This measure is intended to be capture a more psychological aspect of stories: happiness. Some of the biggest stories we share, are either very sad or very happy, and we hope to measure that using a method developed by Dodds et al [citation needed]. The LabMT dataset contains 10222 words with happiness scores on a 1 to 9 scale, averaged over 50 independent ratings through Mechanical Turk.To extend the valence scores on words into scores on phrases, we compute the ambient valence of a phrase $p$ be averaging the scores of all the words surrounding this phrase for which we have scores.
+Another metric we use to find stories is ambient valence. This measure is intended to be capture a more psychological aspect of stories: happiness. Some of the biggest stories we share, are either very sad or very happy, and we hope to capture the changes in happiness using a method developed by Dodds et al [citation needed]. The LabMT dataset contains 10222 words with happiness scores on a 1 to 9 scale, averaged over 50 independent ratings through Mechanical Turk.To extend the valence scores on words into scores on phrases, we compute the ambient valence of a phrase $p$ be averaging the scores of all the words surrounding this phrase for which we have scores.
 % As was shown by Dodds et. al., this instrument is tunable to the removable of neutral words.
 % We test this tunability on ambient phrase scoring by considering the correlation of the happiness timeseries on Twitter.
 The correlation between valence and ambient valence of words in the LabMT set in Figure \ref{fig:ambwordcor} provides some evidence for the validity of this scoring, showing a positive trend with correlation $\rho = .51$.\\
@@ -39,13 +39,13 @@ The correlation between valence and ambient valence of words in the LabMT set in
   \label{fig:ambwordcor}
 \end{figure}
 
-Add other figures.
+
 We next will perform a validation of the choice for $\Delta h = 0$ for this application via a timeseries correlation, in addition to the LabMT word correlations presented as in Figure \ref{fig:ambwordcor}, which we include in the supplementary for more choices of $\Delta h$.\\
 
 
 \textbf{Shifting Phrases Measures Against a Reference}\\
 
-When a significant change in the entropy or valence of langauge occurs, we desire to find the phrases most responsible for this change to indicate the event.
+When a significant change in the entropy or valence of language occurs, we desire to find the phrases most responsible for this change to indicate the event.
 The difficulty here is that specific phrases can contribute to changes in entropy and valence in many ways, since the entropy and valence of that phrase can change.
 For valence, this shift is written as
 \begin{equation} h_\text{avg} ^\text{(comp)} - h_\text{avg} ^{(ref)} \label{eq:valenceshift} \end{equation}
@@ -132,5 +132,14 @@ Note the inaccuracies in the data of Figure \ref{fig:timeseries} in the caption,
   }
   \label{fig:timeseries_boston4}
 \end{figure*}
+
+
+
+\textbf{Conclusion:}\\
+
+Yet to be determined. 
+
+
+
 
 \end{document}
