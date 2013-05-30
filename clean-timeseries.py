@@ -31,17 +31,23 @@ def main():
       for i in range(len(big_list)):
         if len(big_list)-2 > i:
           if big_list[i][14] == big_list[i+1][14]:
-            del big_list[i+1]
+          # if one is zero, the other isn't...delete the zero
+            if float(big_list[i][0]) > 0.1:
+              del big_list[i+1]
+            else:
+              del big_list[i]
 
     # write out the first num entries of the list to a csv
     num = 11
     g = open(tmpout,'w')
     for i in range(len(big_list)):
-      tmpstr=''
-      for j in range(num):
-        tmpstr+=big_list[i][j]+','
-      g.write(tmpstr[:-1]+'\n')
+      if float(big_list[i][0]) > 0.0:
+        tmpstr=''
+        for j in range(num):
+          tmpstr+=big_list[i][j]+','
+        g.write(tmpstr[:-1]+'\n')
     g.close()
+    print 'Wrote ' + tmpout
 
 if __name__ == '__main__':
     main()
