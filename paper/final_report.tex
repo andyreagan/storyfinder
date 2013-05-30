@@ -1,0 +1,110 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm,amssymb,fullpage,graphicx,url,hyperref,setspace}
+\author{Andy Reagan}
+\title{Real-time Entropic Event Detection}
+
+     \def\NN{\mathbb{N} }
+     \def\ZZ{\mathbb{Z} }
+     \def\QQ{\mathbb{Q} }
+     \def\RR{\mathbb{R} }
+     \def\CC{\mathbb{C} }
+     \def\f{\frac }
+     \def\b{\begin }
+     \def\e{\end }
+     \def\Log{\text{Log} \,}
+     \def\Re{\text{Re} \, }
+
+\doublespacing
+
+\begin{document}
+
+\vspace{10cm}
+\maketitle
+
+\vspace{-10mm}
+\begin{center}
+\large{In collaboration with Suma Desu and Jake Williams}
+\end{center}
+
+\pagebreak
+
+\textbf{Abstract:}
+
+Reporting of events through aggregate social media has become increasingly important.
+Recent crises have highlighted this trend, with the extensive use of Twitter and Reddit for news and crowdsourcing in the Boston Marathon bombings of April 2013.
+Building on the text partitioner of Williams et. al. \cite{williams-partitioner}, we develop a method of finding and classifying stories in real time text.
+This ``storyfinder'' computes entropy and ambient valence of phrases, then shifts these measures on individual phrases over time to detect which stories are driving significant changes in langauge use \cite{desu-ambient}.
+An attempt to implement this method on Twitter during the week of the 2013 Boston Marathon serves as a case study on the effectiveness of this method.
+With access to the real-time Twitter feed, this measure can hopefully be fully tested and built into a useful distributed news finder.
+
+\pagebreak
+
+\textbf{Table of Content:}
+
+\begin{itemize}
+\item Overview of Partitioning Text
+\item Computing Entropy of Phrases
+\item Computing Ambient Valence of Phrases
+\item Shifting Phrases Measures Against a Reference
+\item Preliminary Results with Twitter Data
+\end{itemize}
+
+\pagebreak
+
+\textbf{Partitioning Text:}
+
+Here I present a brief description of the partitioner of Williams et. al. \cite{williams-partitioner}.
+Given a phrase $p$, we find the set of contexts of this phrase in $c(p)$.
+
+\textbf{Computing Entropy of Phrases}
+
+The entropy of a phrase is computed within it's local context using Shannon entropy:
+\[ E(p) = \sum _{c(p)} p \log p .\]
+
+\pagebreak
+\textbf{Computing Ambient Valence of Phrases}
+
+The LabMT dataset provided by Dodds et. al. \cite{dodds-happiness} contains 10222 words with happiness scores on a 1 to 9 scale, averaged over 50 independent ratings through Mechanical Turk.
+To extend the valence scores on words into scores on phrases, we compute the ambient valence of a phrase $p$ be averaging the scores of all the words surrounding this phrase for which we have scores.
+% As was shown by Dodds et. al., this instrument is tunable to the removable of neutral words.
+% We test this tunability on ambient phrase scoring by considering the correlation of the happiness timeseries on Twitter.
+The correlation between valence and ambient valence of words in the LabMT set in Figure \cite{fig:ambwordcor} provides some evidence for the validity of this scoring, showing a positive trend with correlation $\rho = .51$.
+
+\begin{figure}
+\begin{center}
+  \includegraphics[width=300px]{../MTambVal_000_plot_noname.pdf}
+  \caption{
+    The valence and ambient valence of words in the LabMT set.
+  }
+  \label{fig:ambwordcor}
+\end{center}
+\end{figure}
+
+\pagebreak
+\textbf{Shifting Phrases Measures Against a Reference}
+
+When a significant change in the entropy or valence of langauge occurs, we desire to find the phrases most responsible for this change to indicate the event.
+The difficulty here is that specific phrases can contribute to changes in entropy and valence in many ways, since the entropy and valence of that phrase can change.
+For valence, this shift is written as
+\[ h_\text{avg} ^\text{(comp)} - h_\text{avg} ^{(ref)} \]
+where $h_\text{avg} ^\text{(comp)}$ is the valence of the text in question and $h_\text{avg} ^\text{(ref)}$ is the valence of the reference text.
+
+\pagebreak
+\textbf{Preliminary Results with Twitter Data}
+
+Applying the above methodology to data from Twitter's Streaming API during the week of the Boston Marathon we hope to be able to see the events that took place through this lens.
+
+
+\begin{figure}
+\begin{center}
+  \includegraphics[width=200px]{../example_timeseries.pdf}
+  \caption{
+  }
+  \label{fig:timeseries}
+\end{center}
+\end{figure}
+
+\pagebreak
+
+The author would like to greatly thank Jake Williams for the general debauchery and Suma Desu for the feats of athleticism that gave birth to this project.
+\end{document}

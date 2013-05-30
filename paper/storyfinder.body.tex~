@@ -1,0 +1,121 @@
+With the advent of the internet came an unprecedented ability to share information quicker and more accurately than ever before.
+The evolution of services that facilitate this sharing of information have culminated today into a crowdsourced encyclopedia vaster than anything before (Wikipedia.org), and social sharing sites such as Twitter and Facebook that are an important means of communication today for most of the developed world.
+On Twitter in particular, more voices are being heard than ever before with more than 500 million people generating over 340 million messages per day.\\
+
+The usefulness of this wealth of interaction has been leveraged in the past to crunch hard problems (FoldIt) and digitize all books (ReCaptcha), and is proving increasinly useful to find information through social search.
+Alongside these efforts, we aim to use the text shared on Twitter to detect important stories being reported by individual users and shared across the network.
+We call this distributed news aggregation tool the \emph{storyfinder}.
+After outlining the methods involved, we present the results of the storyfinder for one week of Twitter data surrounding the 2013 Boston Marathon.\\
+
+\textbf{Partitioning Text:}\\
+
+To begin analyzing the information being shared in large real-time texts, we first need to break this text down into the meaningful units of langauge.
+We call these units phrases.
+Here I present a brief description of the phrase partitioner of Williams et. al. \cite{williams-partitioner} which we rely on.\\
+
+First we create a probability distribution of all possible phrases in a text based on frequency of appearance in that text.
+We then go back and partition the same text using that probability distribution to find the optimal partition of phrases.
+
+\textbf{Computing Entropy of Phrases}\\
+
+The entropy of a phrase is computed within it's local context using Shannon entropy:
+\[ E(p) = \sum _{c(p)} p \log p .\]
+
+For a phrase, the value of entropy is limited by the frequency of appearance of the phrase. \\
+
+\textbf{Computing Ambient Valence of Phrases}\\
+
+The LabMT dataset provided by Dodds et. al. \cite{dodds-happiness} contains 10222 words with happiness scores on a 1 to 9 scale, averaged over 50 independent ratings through Mechanical Turk.
+To extend the valence scores on words into scores on phrases, we compute the ambient valence of a phrase $p$ be averaging the scores of all the words surrounding this phrase for which we have scores.
+% As was shown by Dodds et. al., this instrument is tunable to the removable of neutral words.
+% We test this tunability on ambient phrase scoring by considering the correlation of the happiness timeseries on Twitter.
+The correlation between valence and ambient valence of words in the LabMT set in Figure \ref{fig:ambwordcor} provides some evidence for the validity of this scoring, showing a positive trend with correlation $\rho = .51$.\\
+
+\begin{figure}[tpb!]
+\centering
+  \includegraphics[width=.45\textwidth]{../MTambVal_000_plot_noname.pdf}
+  \caption{
+    The valence and ambient valence of words in the LabMT set.
+  }
+  \label{fig:ambwordcor}
+\end{figure}
+
+We next will perform a validation of the choice for $\Delta h = 0$ for this application via a timeseries correlation, in addition to the LabMT word correlations presented as in Figure \ref{fig:ambwordcor}, which we include in the supplementary for more choices of $\Delta h$.\\
+
+
+\textbf{Shifting Phrases Measures Against a Reference}\\
+
+When a significant change in the entropy or valence of langauge occurs, we desire to find the phrases most responsible for this change to indicate the event.
+The difficulty here is that specific phrases can contribute to changes in entropy and valence in many ways, since the entropy and valence of that phrase can change.
+For valence, this shift is written as
+\begin{equation} h_\text{avg} ^\text{(comp)} - h_\text{avg} ^{(ref)} \label{eq:valenceshift} \end{equation}
+where $h_\text{avg} ^\text{(comp)}$ is the valence of the text in question and $h_\text{avg} ^\text{(ref)}$ is the valence of the reference text.
+
+\begin{figure}[tpb!]
+\centering
+  \includegraphics[width=.45\textwidth]{../example_valence_shift.pdf}
+  \caption{
+    An example entropy shift shows each of the ways that a phrase can contribute to a changing entropy.
+  }
+  \label{fig:exshift}
+\end{figure}
+
+There are many ways to break down equation \ref{eg:valenceshift}, and what we find to give the most insightful breakdown of contributions is analogous to the 2-dimensional derivative. This is writing Eq \ref{eq:valenceshift} as 
+
+\begin{equation} \sum \text{change in usage} - \sum \text{change in meaning} .\ref{eq:shiftbreakdown} \end{equation}
+
+This is represented by Figure \ref{fig:exshift} for the top bar for each word being the real contribution, and the two bars below representing the two terms in Equation \ref{eq:shiftbreakdown}. More, and better, explanation needed eventually.\\
+
+\textbf{Preliminary Results with Twitter Data}\\
+
+Applying the above methodology to data from Twitter's Streaming API during the week of the Boston Marathon we hope to be able to see the events that took place through this lens.
+An example timeseries in Figure \ref{fig:timeseries} for the six days ranging from April 18 through April 26 provides a picture of what we measure for entropy and valence over the week.
+The entropy and valence shifts below correspond to shifting the most recent 15 minutes of Twitter data against the 15 minutes prior.
+Choosing the window with which to bin tweets, and the reference text are important future considerations.
+Our current setup is shifting the current 15 minutes against the previous day, and future experiments will attempt to optimally combine reference texts for the option of attempting to remove the daily cycles that do not represent large events.
+Note the inaccuracies in the data of Figure \ref{fig:timeseries} in the caption, but notice that we do see two significant downward spikes in entropy on April 19. We'll zoom in on those.\\
+
+
+\begin{figure*}
+\centering
+  \includegraphics[width=\textwidth]{../example_timeseries2.pdf}
+  \caption{
+    April 18 through April 26 on Twitter, with shifts plotted for the most recent 15 minutes against the 15 minutes prior.
+    Some of the variations are artifacts of this being a work in progress, and halting our current experiment for hedonometer.org (check it out!): namely the downward spike in the middle of April 25th, and the upward valence bubble near the end are not accurate.
+  }
+  \label{fig:timeseries}
+\end{figure*}
+
+\begin{figure*}
+\centering
+  \includegraphics[width=\textwidth]{boston1.pdf}
+  \caption{
+  }
+  \label{fig:timeseries_boston1}
+\end{figure*}
+
+\begin{figure*}
+\centering
+  \includegraphics[width=\textwidth]{boston2.pdf}
+  \caption{
+  }
+  \label{fig:timeseries_boston2}
+\end{figure*}
+
+\begin{figure*}
+\centering
+  \includegraphics[width=\textwidth]{boston3.pdf}
+  \caption{
+  }
+  \label{fig:timeseries_boston3}
+\end{figure*}
+
+\begin{figure*}
+\centering
+  \includegraphics[width=\textwidth]{boston4.pdf}
+  \caption{
+  }
+  \label{fig:timeseries_boston4}
+\end{figure*}
+
+\end{document}
