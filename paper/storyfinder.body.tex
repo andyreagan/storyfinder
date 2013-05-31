@@ -66,6 +66,18 @@ where $h_\text{avg} ^\text{(comp)}$ is the valence of the text in question and $
 There are many ways to break down equation \ref{eg:valenceshift}, and what we find to give the most insightful breakdown of contributions is analogous to the 2-dimensional derivative.
 This is writing Eq \ref{eq:valenceshift} as, for each word $w$ with happiness $h_w$ and probability of appearance $P(w)$,
 
+\begin{figure}[tpb!]
+\centering
+  \includegraphics[width=.45\textwidth]{../timeseries_noname.pdf}
+  \caption{
+    Valence timeseries on the dates surrounding the Boston Marathon.
+    Ambient valence is computed every 15 minutes.
+    Different values of $\Delta h$ are tested, and we choose $\Delta h = 1$ for ambient valence calculation, as in \cite{hedo-2011}.
+  }
+  \label{fig:timeseries}
+\end{figure}
+
+
 \begin{equation} \sum _w \left ( h_w ^\text{(comp)} - h_w ^\text{(ref)} \right ) \left ( P(w) ^\text{(comp)} - P(w) ^\text{(ref)} \right ) . \end{equation}
 
 This is represented by Figure \ref{fig:exshift} for the top bar for each word, as the total contribution to the change in valence by that word.
@@ -76,9 +88,14 @@ We are able to show the two bars by rewriting the sum above into two terms in th
 \begin{align*} & \sum _w h_w ^\text{(comp)} \left ( P(w) ^\text{(comp)} - P(w) ^\text{(ref)} \right )\\
 & ~~~~~~~~~ + \sum _w\left ( h_w ^\text{(comp)} - h_w ^\text{(ref)} \right ) P(w) ^\text{(comp)} .\end{align*}
 
-
-
-
+\begin{figure}[tpb!]
+\centering
+  \includegraphics[width=.45\textwidth]{../correlationMatrix.pdf}
+  \caption{
+    Correlation of different valence timeseries using different values of $\Delta$ h.
+  }
+  \label{fig:corrMatrix}
+\end{figure}
 
 \textbf{Preliminary Results with Twitter Data}\\
 
