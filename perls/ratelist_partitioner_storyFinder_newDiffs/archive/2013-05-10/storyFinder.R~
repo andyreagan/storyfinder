@@ -1,0 +1,364 @@
+phraseShift_both<-function(k,w,global,diffTime){
+	
+	E_f<-read.csv(paste("/Users/jakerylandwilliams/Desktop/phraseShifts/",as.character(w),"_entropy_shift.csv",sep=""),header=T,quote="\"",sep=",",dec=".",colClasses=c("character","numeric","numeric","numeric","numeric","numeric","numeric","numeric"))
+	E_g<-read.csv("/Users/jakerylandwilliams/Desktop/phraseShifts/entropy_timeseries.csv",sep=",",dec=".",quote="\"",colClasses=c("numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric"),header=F)
+
+	V_f<-read.csv(paste("/Users/jakerylandwilliams/Desktop/phraseShifts/",as.character(w),"_valence_shift.csv",sep=""),header=T,quote="\"",sep=",",dec=".",colClasses=c("character","numeric","numeric","numeric","numeric","numeric","numeric","numeric"))
+	V_g=read.csv("/Users/jakerylandwilliams/Desktop/phraseShifts/valence_timeseries.csv",sep=",",dec=".",quote="\"",colClasses=c("numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric"),header=F)
+
+	E_timeseries=c(mean(E_g[,k+1]),E_g[,k+1])
+	V_timeseries=c(mean(V_g[,k+1]),V_g[,k+1])
+	
+	E_timeseries_ALL=c(mean(E_g[,1]),E_g[,1])
+	V_timeseries_ALL=c(mean(V_g[,1]),V_g[,1])
+
+	if (k==0){	
+		EntSorted=sort(abs(E_f$shiftG),decreasing=T,index.return=T)
+		ValSorted=sort(abs(V_f$shiftG),decreasing=T,index.return=T)
+		
+		E_indices=EntSorted$ix
+		V_indices=ValSorted$ix
+		
+		E_shift=E_f$shiftG
+		V_shift=V_f$shiftG
+		
+		E_up=E_f$upG
+		V_up=V_f$upG
+		
+		E_sgn=E_f$sgnG
+		V_sgn=V_f$sgnG		
+	}
+	else{
+		EntSorted=sort(abs(E_f$shiftL),decreasing=T,index.return=T)
+		E_indices=EntSorted$ix[E_f$order[EntSorted$ix]==k]
+	
+		ValSorted=sort(abs(V_f$shiftL),decreasing=T,index.return=T)
+		V_indices=ValSorted$ix[V_f$order[ValSorted$ix]==k]		
+		
+		E_shift=E_f$shiftL
+		V_shift=V_f$shiftL
+		
+		E_up=E_f$upL
+		V_up=V_f$upL
+		
+		E_sgn=E_f$sgnL
+		V_sgn=V_f$sgnL		
+	}
+		
+	E_diff=(E_timeseries[w]-E_timeseries[w-1])
+	V_diff=(V_timeseries[w]-V_timeseries[w-1])
+	
+	refEnt=E_timeseries[w-1]
+	refVal=V_timeseries[w-1]
+	
+	compEnt=E_timeseries[w]
+	compVal=V_timeseries[w]
+	
+	if (diffTime){
+		M=length(E_timeseries)
+		N=length(V_timeseries)
+		E_timeseries=c(0,E_timeseries[2:M]-E_timeseries[1:(M-1)])
+		V_timeseries=c(0,V_timeseries[2:N]-V_timeseries[1:(N-1)])
+	}
+	
+	#FILE=paste("/Users/jakerylandwilliams/Desktop/phraseShifts/",as.character(w),"_",as.character(k),"-storyFinder.pdf",sep="")
+	#pdf(file=FILE,9.7,7.5)
+			
+	
+	entList=c()
+	valList=c()
+	for (i in 20:1){
+		
+		if (E_up[E_indices[i]]){
+			if (E_sgn[E_indices[i]]){
+				entList=rbind(entList,c(abs(E_shift[E_indices[i]]),E_sgn[E_indices[i]],"lightgoldenrod",E_f$phrase[E_indices[i]],24))	#(shift,sign,color,phrase,pch)
+			}
+			else{
+				entList=rbind(entList,c(-abs(E_shift[E_indices[i]]),E_sgn[E_indices[i]],"steelblue",E_f$phrase[E_indices[i]],24))
+			}
+		}
+		else{
+			if (E_sgn[E_indices[i]]){
+				entList=rbind(entList,c(-abs(E_shift[E_indices[i]]),E_sgn[E_indices[i]],"lightgoldenrod",E_f$phrase[E_indices[i]],25))
+			}
+			else{
+				entList=rbind(entList,c(abs(E_shift[E_indices[i]]),E_sgn[E_indices[i]],"steelblue",E_f$phrase[E_indices[i]],25))
+			}
+		}
+		
+		if (V_up[V_indices[i]]){
+			if (V_sgn[V_indices[i]]){
+				valList=rbind(valList,c(abs(V_shift[V_indices[i]]),V_sgn[V_indices[i]],"lightgoldenrod",V_f$phrase[V_indices[i]],24))	#(shift,sign,color,phrase,pch)
+			}
+			else{
+				valList=rbind(valList,c(-abs(V_shift[V_indices[i]]),V_sgn[V_indices[i]],"steelblue",V_f$phrase[V_indices[i]],24))
+			}
+		}
+		else{
+			if (V_sgn[V_indices[i]]){
+				valList=rbind(valList,c(-abs(V_shift[V_indices[i]]),V_sgn[V_indices[i]],"lightgoldenrod",V_f$phrase[V_indices[i]],25))
+			}
+			else{
+				valList=rbind(valList,c(abs(V_shift[V_indices[i]]),V_sgn[V_indices[i]],"steelblue",V_f$phrase[V_indices[i]],25))
+			}
+		}
+	}
+		
+	if (E_timeseries[w]>E_timeseries[w-1]){
+		entropy="  >"
+	}
+	else{
+		entropy="  <"
+	}
+	if (V_timeseries[w]>V_timeseries[w-1]){
+		valence="  >"
+	}
+	else{
+		valence="  <"
+	}	
+	
+	E_HeightLeft=(0:19)*1.2+0.6
+	E_HeightRight=(0:19)*1.2+0.6
+	E_Left=as.numeric(entList[,1])
+	E_Right=as.numeric(entList[,1])
+	
+	E_HeightLeft=E_HeightLeft[E_Left>0]
+	E_entLeft=entList[E_Left>0,4]
+	E_Lcol=entList[E_Left>0,3]
+	E_LPCH=as.numeric(entList[E_Left>0,5])
+	E_Left=E_Left[E_Left>0]
+	
+	E_HeightRight=E_HeightRight[E_Right<0]
+	E_entRight=entList[E_Right<0,4]
+	E_Rcol=entList[E_Right<0,3]
+	E_RPCH=as.numeric(entList[E_Right<0,5])
+	E_Right=E_Right[E_Right<0]
+	
+	V_HeightLeft=(0:19)*1.2+0.6
+	V_HeightRight=(0:19)*1.2+0.6
+	V_Left=as.numeric(valList[,1])
+	V_Right=as.numeric(valList[,1])
+	
+	V_HeightLeft=V_HeightLeft[V_Left>0]
+	V_valLeft=valList[V_Left>0,4]
+	V_Lcol=valList[V_Left>0,3]
+	V_LPCH=as.numeric(valList[V_Left>0,5])
+	V_Left=V_Left[V_Left>0]
+	
+	V_HeightRight=V_HeightRight[V_Right<0]
+	V_valRight=valList[V_Right<0,4]
+	V_Rcol=valList[V_Right<0,3]
+	V_RPCH=as.numeric(valList[V_Right<0,5])
+	V_Right=V_Right[V_Right<0]
+		
+	quartz("",9.7,7.5)
+	par(las=2,mfrow=c(2,2),fig=c(0.0675,0.43,0,0.55))
+	barplot(as.numeric(entList[,1]),col=entList[,3],horiz=T,xlim=c(-max(abs(as.numeric(entList[,1]))),max(abs(as.numeric(entList[,1]))))*1.1,xaxt="n",main=quote(S["comp"]~~~~~~S["ref"]),ylim=c(0,25.5))
+	
+	if (length(E_entRight)){
+		text((1:length(E_entRight))*0,E_HeightRight,E_entRight,pos=4,cex=0.6)	
+		points(E_Right,E_HeightRight,pch=E_RPCH,bg=E_Rcol)
+	}
+	if (length(E_entLeft)){
+		points(E_Left,E_HeightLeft,pch=E_LPCH,bg=E_Lcol)		
+		text((1:length(E_entLeft))*0,E_HeightLeft,E_entLeft,pos=2,cex=0.6)
+	}
+	
+	if (k){
+		plotk=as.character(k)
+	}
+	else{
+		plotk="all"	
+	}
+	title(main=entropy,cex.main=1)
+	text(0,25.5,paste(plotk,"-Entropy shift",sep=""))
+	E_xlims=signif(max(abs(as.numeric(entList[,1]))),2)
+	par(las=1)
+	
+	axis(1,c(-max(abs(as.numeric(entList[,1]))),max(abs(as.numeric(entList[,1]))))*0.75, 0.75*c(E_xlims,E_xlims),cex.axis=0.7,lwd.ticks=0.5)
+	axis(1,0,"(bits)",cex.axis=0.8,lwd.ticks=0)
+	
+	par(las=2,mfrow=c(2,2),fig=c(0.0675,0.47,0.05,0.485))
+	box(which="figure",lty=1,lwd=4)
+
+
+	E_blueIx=E_indices[which(E_sgn[E_indices]==0)]
+	E_yellowIx=E_indices[which(E_sgn[E_indices]==1)]
+	
+	E_blueUpIx=E_blueIx[which(E_up[E_blueIx]==1)]
+	E_blueDownIx=E_blueIx[which(E_up[E_blueIx]==0)]
+	
+	E_yellowUpIx=E_yellowIx[which(E_up[E_yellowIx]==1)]
+	E_yellowDownIx=E_yellowIx[which(E_up[E_yellowIx]==0)]
+		
+	E_Weights=c(sum(E_shift[E_blueUpIx]),sum(E_shift[E_blueDownIx]),sum(E_shift[E_yellowUpIx]),sum(E_shift[E_yellowDownIx]))	
+	
+	E_BUW=sqrt(abs(E_Weights[1])/sum(abs(E_Weights)))
+	E_BDW=sqrt(abs(E_Weights[2])/sum(abs(E_Weights)))
+	E_YUW=sqrt(abs(E_Weights[3])/sum(abs(E_Weights)))
+	E_YDW=sqrt(abs(E_Weights[4])/sum(abs(E_Weights)))
+
+	par(las=2,mfrow=c(2,2),fig=c(0,0.5,0,0.5),new=T)
+	CUS_X=c(-0.5,-0.5,0.5,0.5)*2
+	CUS_Y=c(-0.5,0.5,0.5,-0.5)*2
+
+	plot(-5,-2.5,pch=25,bg="black",axes=F,xlab="",ylab="",xlim=c(-5,7)*1.293333,ylim=c(-5,5))
+	
+
+	polygon(CUS_X*E_YDW-5,CUS_Y*E_YDW-2.5,col="lightgoldenrod")
+	points(-5,-2.5,pch=25,bg="lightgoldenrod")
+	if (E_Weights[4]>0){
+		polygon(CUS_X*E_YDW-5,CUS_Y*E_YDW-2.5,border="red")
+		points(-5,-2.5,pch=25,bg="lightgoldenrod",col="red")
+	}	
+
+	polygon(CUS_X*E_BDW+7,CUS_Y*E_BDW-4,col="steelblue")
+	points(+7,-4,pch=25,bg="steelblue")
+	if (E_Weights[2]<0){
+		polygon(CUS_X*E_BDW+7,CUS_Y*E_BDW-4,border="red")
+		points(+7,-4,pch=25,bg="steelblue",col="red")
+	}
+	
+	polygon(CUS_X*E_BUW-5,CUS_Y*E_BUW-4,col="steelblue")
+	points(-5,-4,pch=24,bg="steelblue")
+	if (E_Weights[1]>0){
+		polygon(CUS_X*E_BUW-5,CUS_Y*E_BUW-4,border="red")
+		points(-5,-4,pch=24,bg="steelblue",col="red")
+	}
+	
+	polygon(CUS_X*E_YUW+7,CUS_Y*E_YUW-2.5,col="lightgoldenrod")
+	points(+7,-2.5,pch=24,bg="lightgoldenrod")
+	if (E_Weights[3]<0){
+		polygon(CUS_X*E_YUW+7,CUS_Y*E_YUW-2.5,border="red")
+		points(+7,-2.5,pch=24,bg="lightgoldenrod",col="red")	
+	}
+	
+	
+	par(las=2,fig=c(0.565,0.9275,0,0.55),new=T)
+	barplot(as.numeric(valList[,1]),col=valList[,3],horiz=T,xlim=c(-max(abs(as.numeric(valList[,1]))),max(abs(as.numeric(valList[,1]))))*1.1,xaxt="n",ylim=c(0,25.5),main=quote(h["comp"]~~~~~~h["ref"]))
+	
+	if (length(V_valRight)){
+		text((1:length(V_valRight))*0,V_HeightRight,V_valRight,pos=4,cex=0.6)
+		points(V_Right,V_HeightRight,pch=V_RPCH,bg=V_Rcol)
+	}
+	if (length(V_valLeft)){
+		points(V_Left,V_HeightLeft,pch=V_LPCH,bg=V_Lcol)
+		text((1:length(V_valLeft))*0,V_HeightLeft,V_valLeft,pos=2,cex=0.6)
+	}
+			
+	title(main=valence,cex.main=1)
+	text(0,25.5,paste(plotk,"-Valence shift",sep=""))
+	V_xlims=signif(max(abs(as.numeric(valList[,1]))),2)
+	par(las=1)
+	
+	axis(1,c(-max(abs(as.numeric(valList[,1]))),max(abs(as.numeric(valList[,1]))))*0.75, 0.75*c(V_xlims,V_xlims),cex.axis=0.7,lwd.ticks=0.5)
+	axis(1,0,"(happs)",cex.axis=0.8,lwd.ticks=0)
+	
+	par(las=2,fig=c(0.565,0.9675,0.05,0.485),new=T)
+	box(which="figure",lty=1,lwd=4)
+	
+		
+	V_blueIx=V_indices[which(V_sgn[V_indices]==0)]
+	V_yellowIx=V_indices[which(V_sgn[V_indices]==1)]
+	
+	V_blueUpIx=V_blueIx[which(V_up[V_blueIx]==1)]
+	V_blueDownIx=V_blueIx[which(V_up[V_blueIx]==0)]
+	
+	V_yellowUpIx=V_yellowIx[which(V_up[V_yellowIx]==1)]
+	V_yellowDownIx=V_yellowIx[which(V_up[V_yellowIx]==0)]
+	
+	V_Weights=c(sum(V_shift[V_blueUpIx]),sum(V_shift[V_blueDownIx]),sum(V_shift[V_yellowUpIx]),sum(V_shift[V_yellowDownIx]))
+	
+	V_BUW=sqrt(abs(V_Weights[1])/sum(abs(V_Weights)))
+	V_BDW=sqrt(abs(V_Weights[2])/sum(abs(V_Weights)))
+	V_YUW=sqrt(abs(V_Weights[3])/sum(abs(V_Weights)))
+	V_YDW=sqrt(abs(V_Weights[4])/sum(abs(V_Weights)))
+		
+	par(las=2,mfrow=c(2,2),fig=c(0.5,1,0,0.5),new=T)
+	plot(-5,-2.5,pch=25,bg="black",axes=F,xlab="",ylab="",xlim=c(-5,7)*1.293333,ylim=c(-5,5))
+	
+	polygon(CUS_X*V_YDW-5,CUS_Y*V_YDW-2.5,col="lightgoldenrod")
+	points(-5,-2.5,pch=25,bg="lightgoldenrod")
+	if (V_Weights[4]>0){
+		polygon(CUS_X*V_YDW-5,CUS_Y*V_YDW-2.5,border="red")
+		points(-5,-2.5,pch=25,bg="lightgoldenrod",col="red")	
+	}
+	
+	polygon(CUS_X*V_BDW+7,CUS_Y*V_BDW-4,col="steelblue")
+	points(+7,-4,pch=25,bg="steelblue")
+	if (V_Weights[2]<0){
+		polygon(CUS_X*V_BDW+7,CUS_Y*V_BDW-4,border="red")
+		points(+7,-4,pch=25,bg="steelblue",col="red")	
+	}
+	
+	polygon(CUS_X*V_BUW-5,CUS_Y*V_BUW-4,col="steelblue")
+	points(-5,-4,pch=24,bg="steelblue")
+	if (V_Weights[1]>0){
+		polygon(CUS_X*V_BUW-5,CUS_Y*V_BUW-4,border="red")
+		points(-5,-4,pch=24,bg="steelblue",col="red")	
+	}
+	
+	polygon(CUS_X*V_YUW+7,CUS_Y*V_YUW-2.5,col="lightgoldenrod")
+	points(+7,-2.5,pch=24,bg="lightgoldenrod")
+	if (V_Weights[3]<0){
+		polygon(CUS_X*V_YUW+7,CUS_Y*V_YUW-2.5,border="red")
+		points(+7,-2.5,pch=24,bg="lightgoldenrod",col="red")	
+	}
+	
+			
+	
+	years=c(1)
+	for (i in 3:24){
+		if ((i %% 4) == 0){
+			years=c(years,years[length(years)]+366)
+		}
+		else{
+			years=c(years,years[length(years)]+365)
+		}
+	}
+	
+	startyear=1
+	endyear=366
+	for (i in 2:length(years)){
+		if ((w*7)>years[i]){
+			startyear=round(years[i]/7)
+			
+			endyear=round(years[i+1]/7)
+		}
+	}
+	
+	if (global){
+		startyear=2
+		endyear=1068
+	}		
+			
+	par(las=2,fig=c(0,1,0.6725,1),new=T)
+	plot((startyear:endyear)*7,E_timeseries[startyear:endyear],pch=20,xlab="",ylab="(bits)",main="Timeseries'",type="l",cex=0.5,xaxt='n',col="black")
+	points(w*7,E_timeseries[w],pch=20,col='red',cex=1)
+	if (diffTime){
+		lines(c(1,M*7),c(0,0),col='red',lty=3)
+	}
+		
+	for (i in 1:22){
+		lines(c(years[i],years[i]),c(-10,10),lty=3,col='grey')
+	}
+	
+	par(las=2,fig=c(0,1,0.5,0.8275),new=T)
+	plot((startyear:endyear)*7,V_timeseries[startyear:endyear],pch=20,xlab="Year",ylab="(happs)",main="",type="l",cex=0.5,xaxt='n',col="black")
+	points(w*7,V_timeseries[w],pch=20,col='red',cex=1)
+	if (diffTime){
+		lines(c(1,N*7),c(0,0),col='red',lty=3)
+	}	
+	
+	for (i in 1:22){
+		lines(c(years[i],years[i]),c(-10,10),lty=3,col='grey')
+	}
+	
+	hyears=1987:2009	
+	
+	axis(1,years,hyears,las=0)
+	
+	
+	#dev.off()
+	
+}

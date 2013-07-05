@@ -1,0 +1,7 @@
+storyFinder.pl sample call:
+
+note: before you run for the first time create empty reference files: (/.../oldRefCounts.csv) & (/.../oldRefEntropy.csv)
+
+cd (directory of the perl script)
+
+perl storyFinder.pl "/.../newData.txt" "/.../oldRefCounts.csv" "/.../oldRefEntropy.csv" "/.../root"

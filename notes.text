@@ -1,0 +1,4 @@
+# getting tweets from squirell via morgan
+
+#rsync -avz twitter@REDACTED_IP:/mnt/tweets-external/data/${FOLDER} /gpfs1/home/m/r/mrfrank/
+

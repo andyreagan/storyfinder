@@ -1,0 +1,144 @@
+#!/usr/bin/perl
+  use strict;
+  use warnings;
+
+
+# collect user input
+my $countloc=$ARGV[0];
+my $outfile=$ARGV[1];
+my $maxorder=$ARGV[2];
+
+
+# initializations
+my $newline="\n";
+my $colon="\:";
+my $comma="\,";
+my $quote="\"";
+my $star="\*";
+my $line;
+my $rank=1;
+my $meanphrase="NULL";
+my $order;
+my $count;
+my $phrase;
+my @newranks;
+my @newcounts=(0) x $maxorder;
+my @neworders=@newcounts;
+#my @neworders=(0,0,0,0,0,0,0,0,0,0);
+#my @newcounts=(0,0,0,0,0,0,0,0,0,0);
+my @newphrases;
+my @recentranks;
+my @recentorders=@neworders;
+my @recentcounts=@newcounts;
+#my @recentorders=(0,0,0,0,0,0,0,0,0,0);
+#my @recentcounts=(0,0,0,0,0,0,0,0,0,0);
+my @recentphrases;
+my @oldranks;
+my @oldorders=@neworders;
+my @oldcounts=@newcounts;
+#my @oldorders=(0,0,0,0,0,0,0,0,0,0);
+#my @oldcounts=(0,0,0,0,0,0,0,0,0,0);
+my @oldphrases;
+my $i;
+
+sub log10 {
+  my $n = shift;
+  return log($n)/log(10);
+}
+
+# open full space hash table as huge string
+open my $countdist,'<',$countloc;
+open(OUTFILE,'>',$outfile);
+print OUTFILE "phrase\,order\,rank\,count$newline";
+# print counting data in csv -> order,sequence,rank,weight
+while ($line=<$countdist>){
+    if ($line=~m/(.*?)$comma(.*?)$comma(.*?)$newline/gi){	
+	$order=$1;
+	$count=$3;
+	$phrase=$2;
+	$neworders[$order-1]=$order;
+	$newcounts[$order-1]=$count;
+	$newphrases[$order-1]=$phrase;
+	$newranks[$order-1]=$rank;
+	$rank++;	
+	if ($oldorders[$order-1]){
+	    if (abs($oldcounts[$order-1]-$newcounts[$order-1])>10**(-16)){
+		if ($recentorders[$order-1]){
+		    if (abs($recentcounts[$order-1]-$oldcounts[$order-1])<=10**(-16)){
+			print OUTFILE $oldphrases[$order-1].$comma.$oldorders[$order-1].$comma.$oldranks[$order-1].$comma.$oldcounts[$order-1].$newline;
+			$oldranks[$order-1]=$recentranks[$order-1];
+			$oldcounts[$order-1]=$recentcounts[$order-1];	    
+			$oldphrases[$order-1]=$recentphrases[$order-1];
+			$oldorders[$order-1]=$recentorders[$order-1];		    
+			$recentranks[$order-1]=10**((&log10($oldranks[$order-1])+&log10($recentranks[$order-1]))/2);
+			$recentphrases[$order-1]=$meanphrase;
+			print OUTFILE $recentphrases[$order-1].$comma.$recentorders[$order-1].$comma.$recentranks[$order-1].$comma.$recentcounts[$order-1].$newline;
+			$recentorders[$order-1]=0;
+		    }
+		}
+	        print OUTFILE $oldphrases[$order-1].$comma.$oldorders[$order-1].$comma.$oldranks[$order-1].$comma.$oldcounts[$order-1].$newline;
+		$oldranks[$order-1]=$newranks[$order-1];
+	        $oldcounts[$order-1]=$newcounts[$order-1];	    
+		$oldphrases[$order-1]=$newphrases[$order-1];
+	        $oldorders[$order-1]=$neworders[$order-1];
+		$neworders[$order-1]=0;
+	    }
+	    else{
+		$recentranks[$order-1]=$newranks[$order-1];
+	        $recentcounts[$order-1]=$newcounts[$order-1];	    
+		$recentphrases[$order-1]=$newphrases[$order-1];
+	        $recentorders[$order-1]=$neworders[$order-1];
+	    }
+	}
+        else{		
+	    $oldranks[$order-1]=$newranks[$order-1];
+	    $oldcounts[$order-1]=$newcounts[$order-1];
+	    $oldphrases[$order-1]=$newphrases[$order-1];
+	    $oldorders[$order-1]=$neworders[$order-1];
+	}
+    }
+}
+for ($i=0;$i<$maxorder;$i++){
+    if ($neworders[$i]){
+	if (abs($oldcounts[$i]-$newcounts[$i])>10**(-16)){
+	    if ($recentorders[$i]){
+		if (abs($recentcounts[$i]-$oldcounts[$i])<=10**(-16)){
+		    print OUTFILE $oldphrases[$i].$comma.$oldorders[$i].$comma.$oldranks[$i].$comma.$oldcounts[$i].$newline;
+		    $oldranks[$i]=$recentranks[$i];
+		    $oldcounts[$i]=$recentcounts[$i];	    
+		    $oldphrases[$i]=$recentphrases[$i];
+		    $oldorders[$i]=$recentorders[$i];		    
+		    $recentranks[$i]=10**((&log10($oldranks[$i])+&log10($recentranks[$i]))/2);
+		    $recentphrases[$i]=$meanphrase;
+		    print OUTFILE $recentphrases[$i].$comma.$recentorders[$i].$comma.$recentranks[$i].$comma.$recentcounts[$i].$newline;
+		}
+	    }
+	    print OUTFILE $oldphrases[$i].$comma.$oldorders[$i].$comma.$oldranks[$i].$comma.$oldcounts[$i].$newline;
+	    $oldranks[$i]=$newranks[$i];
+	    $oldcounts[$i]=$newcounts[$i];	    
+	    $oldphrases[$i]=$newphrases[$i];
+	    $oldorders[$i]=$neworders[$i];
+	    $neworders[$i]=0;
+	}
+	else{
+	    $recentranks[$i]=$newranks[$i];
+	    $recentcounts[$i]=$newcounts[$i];	    
+	    $recentphrases[$i]=$newphrases[$i];
+	    $recentorders[$i]=$neworders[$i];
+	    print OUTFILE $oldphrases[$i].$comma.$oldorders[$i].$comma.$oldranks[$i].$comma.$oldcounts[$i].$newline;
+	    $oldranks[$i]=$recentranks[$i];
+	    $oldcounts[$i]=$recentcounts[$i];	    
+	    $oldphrases[$i]=$recentphrases[$i];
+	    $oldorders[$i]=$recentorders[$i];		    
+	    $recentranks[$i]=10**((&log10($oldranks[$i])+&log10($recentranks[$i]))/2);
+	    $recentphrases[$i]=$meanphrase;
+	    print OUTFILE $recentphrases[$i].$comma.$recentorders[$i].$comma.$recentranks[$i].$comma.$recentcounts[$i].$newline;
+	    print OUTFILE $oldphrases[$i].$comma.$oldorders[$i].$comma.$oldranks[$i].$comma.$oldcounts[$i].$newline;
+	}
+    }
+    else{
+	print OUTFILE $oldphrases[$i].$comma.$oldorders[$i].$comma.$oldranks[$i].$comma.$oldcounts[$i].$newline;
+    }
+}
+close(OUTFILE);
+close $countdist;

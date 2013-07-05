@@ -1,0 +1,237 @@
+phraseShiftOnly<-function(k,shiftFile,index,figure){
+	if (!(sum(figure))){
+		figure=c(0,1,0,1)	
+	}
+	f<-read.csv(shiftFile,header=T,quote="\"",sep=",",dec=".",colClasses=c("character","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric"))
+	
+	indices=which(!(f$pCompG==0))
+	indices=indices[which(!(f$pRefG[indices]==0))]
+	f=f[indices,]
+	
+	
+	if (k==0){			
+		naturalShifts=(f$indexComp-f$indexAveRefG)*(f$pCompG-f$pRefG)	
+		delBright=(f$indexComp-f$indexRef)*f$pRefG
+		shifts=naturalShifts+delBright
+		phrases=f$phrase
+		delI=(f$indexComp-f$indexAveRefG)
+		delP=(f$pCompG-f$pRefG)
+			
+		sorted=sort(abs(shifts),decreasing=T,index.return=T)
+		indices=sorted$ix
+		
+		naturalShifts=naturalShifts[indices]
+		delBright=delBright[indices]
+		shifts=shifts[indices]		
+		phrases=phrases[indices]
+		delI=delI[indices]
+		delP=delP[indices]
+	}
+	else{
+		kIx=which(f$order==k)
+		
+		naturalShifts=(f$indexComp[kIx]-f$indexAveRefL[kIx])*(f$pCompL[kIx]-f$pRefL[kIx])	
+		delBright=(f$indexComp[kIx]-f$indexRef[kIx])*f$pRefL[kIx]
+		phrases=f$phrase[kIx]
+		delI=(f$indexComp[kIx]-f$indexAveRefG[kIx])
+		delP=(f$pCompG[kIx]-f$pRefG[kIx])
+		shifts=naturalShifts+delBright
+			
+		sorted=sort(abs(shifts),decreasing=T,index.return=T)
+		indices=sorted$ix
+		
+		naturalShifts=naturalShifts[indices]
+		delBright=delBright[indices]
+		shifts=shifts[indices]
+		phrases=phrases[indices]		
+		delI=delI[indices]
+		delP=delP[indices]
+	}
+				
+	list=c()
+	extraslist=c()
+	for (i in 20:1){
+				
+		if (delI[i]>0){
+			if (delP[i]>0){
+				if (delBright[i]>0){
+					extraslist=rbind(extraslist,c(shifts[i],naturalShifts[i],shifts[i],"khaki4","", "","khaki4"))	#(shift,naturalShift,delBright,color,phrase,pch)				
+				}
+				else{
+					extraslist=rbind(extraslist,c(delBright[i],naturalShifts[i],delBright[i],"khaki4","", "","royalblue4"))
+				}
+				extraslist=rbind(extraslist,c(0,0,0,"white","","","white"))
+				list=rbind(list,c(0,0,0,"white","",""))
+				list=rbind(list,c(shifts[i],0,0,"khaki1",phrases[i],24))
+			}
+			else{
+				if (delBright[i]>0){
+					extraslist=rbind(extraslist,c(delBright[i],naturalShifts[i],delBright[i],"khaki4","","","khaki4"))   #(shift,naturalShift,delBright,color,phrase,pch)				
+				}
+				else{
+					extraslist=rbind(extraslist,c(shifts[i],naturalShifts[i],shifts[i],"khaki4","","","royalblue4"))
+				}
+				extraslist=rbind(extraslist,c(0,0,0,"white","","","white"))
+				list=rbind(list,c(0,0,0,"white","",""))
+				list=rbind(list,c(shifts[i],0,0,"khaki1",phrases[i],25))
+			}
+		}
+		else{
+			if (delP[i]>0){
+				if (delBright[i]>0){
+					extraslist=rbind(extraslist,c(delBright[i],naturalShifts[i],delBright[i],"royalblue4","","","khaki4"))	#(shift,naturalShift,delBright,color,phrase,pch)				
+				}
+				else{
+					extraslist=rbind(extraslist,c(shifts[i],naturalShifts[i],shifts[i],"royalblue4","","","royalblue4"))
+				}
+				extraslist=rbind(extraslist,c(0,0,0,"white","","","white"))
+				list=rbind(list,c(0,0,0,"white","",""))
+				list=rbind(list,c(shifts[i],0,0,"royalblue1",phrases[i],24))
+			}
+			else{
+				if (delBright[i]>0){
+					extraslist=rbind(extraslist,c(shifts[i],naturalShifts[i],shifts[i],"royalblue4","","","khaki4"))	  #(shift,naturalShift,delBright,color,phrase,pch)				
+				}
+				else{
+					extraslist=rbind(extraslist,c(delBright[i],naturalShifts[i],delBright[i],"royalblue4","","","royalblue4"))
+				}
+				extraslist=rbind(extraslist,c(0,0,0,"white","","","white"))
+				list=rbind(list,c(0,0,0,"white","",""))
+				list=rbind(list,c(shifts[i],0,0,"royalblue1",phrases[i],25))
+			}
+		}
+	}
+	
+	#(shifts,naturalShifts,delBright,color,phrase,pch)
+	
+	N_HeightLeft=(0:39)*1.2+0.6
+	N_HeightRight=(0:39)*1.2+0.6
+	N_leftPos=as.numeric(list[,1])
+	N_rightPos=as.numeric(list[,1])
+	
+	N_leftPhrasePos=as.numeric(list[,1])
+	N_rightPhrasePos=as.numeric(list[,1])
+
+		
+	N_leftPhrasePos=N_leftPhrasePos[N_leftPos>0]
+	N_phraseHeightLeft=N_HeightLeft[N_leftPos>0]
+	N_left=list[N_leftPos>0,5]
+
+	
+	N_rightPhrasePos=N_rightPhrasePos[N_rightPos<0]
+	N_phraseHeightRight=N_HeightRight[N_rightPos<0]
+	N_right=list[N_rightPos<0,5]
+
+
+	N_HeightLeft=N_HeightLeft[N_leftPos>0]	
+	N_Lcol=list[N_leftPos>0,4]
+	N_LPCH=as.numeric(list[N_leftPos>0,6])
+	N_leftPos=N_leftPos[N_leftPos>0]	
+		
+	N_HeightRight=N_HeightRight[N_rightPos<0]		
+	N_Rcol=list[N_rightPos<0,4]
+	N_RPCH=as.numeric(list[N_rightPos<0,6])
+	N_rightPos=N_rightPos[N_rightPos<0]
+	
+	
+	biglims=c(-max(abs(as.numeric(c(extraslist[,2],extraslist[,3])))),max(abs(as.numeric(c(extraslist[,2],extraslist[,3])))))*1.1
+	if ((sum(figure)==2)){
+		quartz("",5,7)
+		par(las=2,fig=figure+c(0,0,0.05*(figure[4]-figure[3]),0),mar=c(2,1,1,1))
+	}
+	else{
+		par(las=2,fig=figure+c(0,0,0.05*(figure[4]-figure[3]),0),mar=c(2,1,1,1),new=T)
+	}
+	barplot(as.numeric(list[,1]),col=list[,4],horiz=T,xlim=biglims,xaxt="n",ylim=c(0,51),beside=F)
+	barplot(as.numeric(extraslist[,3]),col=extraslist[,7],horiz=T,xlim=biglims,xaxt="n",ylim=c(0,51),beside=F,add=T,lwd=0.5,density=40)
+	barplot(as.numeric(extraslist[,2]),col=extraslist[,4],horiz=T,xlim=biglims,xaxt="n",ylim=c(0,51),beside=F,add=T,lwd=0.5)
+	
+	
+	if (length(N_rightPos)){
+		text((1:length(N_rightPhrasePos))*0,N_phraseHeightRight,N_right,pos=4,cex=0.5)
+		points(N_rightPos,N_HeightRight,pch=N_RPCH,bg=N_Rcol,cex=0.5,xlim=biglims*1.5,xlab="",ylab="",xaxt="n",yaxt="n")
+	}
+	if (length(N_leftPos)){
+		text((1:length(N_leftPhrasePos))*0,N_phraseHeightLeft,N_left,pos=2,cex=0.5)
+		points(N_leftPos,N_HeightLeft,pch=N_LPCH,bg=N_Lcol,xlim=biglims*1.5,cex=0.5,xlab="",ylab="",xaxt="n",yaxt="n")		
+	}
+	
+	if (k){
+		plotk=as.character(k)
+	}
+	else{
+		plotk="all"	
+	}
+	
+	text(0,51,paste(plotk,"-",index," Shift",sep=""))
+	N_xlims=signif(max(abs(as.numeric(biglims/1.1))),1)
+	par(las=1)
+	
+	axis(1,biglims/1.1, c(N_xlims,N_xlims),cex.axis=0.7,lwd.ticks=0.5)
+	axis(1,0,"",cex.axis=0.8,lwd.ticks=0)
+	
+	par(las=2,mfrow=c(2,2),fig=figure+c(0.025*(figure[2]-figure[1]),-.025*(figure[2]-figure[1]),0.025*(figure[4]-figure[3]),-0.025*(figure[4]-figure[3])), new=T)
+	box(which="figure",lty=1,lwd=1)
+
+	CUS_X=c(-0.5,-0.5,0.5,0.5)*4
+	CUS_Y=c(-0.5,0.5,0.5,-0.5)*4
+
+	brightUpIx=which(delBright>=0)
+	brightDownIx=which(delBright<0)
+
+	N_blueIx=which(delI<=0)
+	N_khakiIx=which(delI>0)
+	
+	N_blueUpIx=N_blueIx[which(delP[N_blueIx]>0)]
+	N_blueDownIx=N_blueIx[which(delP[N_blueIx]<=0)]
+	
+	N_khakiUpIx=N_khakiIx[which(delP[N_khakiIx]>0)]
+	N_khakiDownIx=N_khakiIx[which(delP[N_khakiIx]<=0)]
+
+		
+	N_Weights=c(sum(naturalShifts[N_blueUpIx]),sum(naturalShifts[N_blueDownIx]),sum(naturalShifts[N_khakiUpIx]),sum(naturalShifts[N_khakiDownIx]),sum(delBright[brightUpIx]),sum(delBright[brightDownIx]))
+        if (sum(delBright)>0){
+                N_Weights[5]=sum(delBright)
+                N_Weights[6]=0
+        }
+        if (sum(delBright)<0){
+                N_Weights[6]=sum(delBright)
+                N_Weights[5]=0
+        }
+        if (sum(delBright)==0){
+                N_Weights[5]=0
+                N_Weights[6]=0
+        }
+
+	print(N_Weights)
+	print(sum(N_Weights))
+	
+	N_BUW=sqrt(abs(N_Weights[1])/sum(abs(N_Weights)))
+	N_BDW=sqrt(abs(N_Weights[2])/sum(abs(N_Weights)))
+	N_YUW=sqrt(abs(N_Weights[3])/sum(abs(N_Weights)))
+	N_YDW=sqrt(abs(N_Weights[4])/sum(abs(N_Weights)))
+	N_DBU=sqrt(abs(N_Weights[5])/sum(abs(N_Weights)))
+	N_DBD=sqrt(abs(N_Weights[6])/sum(abs(N_Weights)))
+	
+	par(las=2,mfrow=c(2,2),fig=figure+c(0,-(figure[2]-figure[1])/2,0,-(figure[4]-figure[3])/2),new=T)
+	plot(-10,2,pch=25,bg="black",axes=F,xlab="",ylab="",xlim=c(-9,9)*1.293333,ylim=c(-5,5),asp=T,cex=0.5)
+	
+	polygon(CUS_X*N_YDW-7,CUS_Y*N_YDW+2,col="khaki4")
+	points(-10,2,pch=25,bg="khaki4",cex=0.5)	
+
+	polygon(CUS_X*N_BUW-7,CUS_Y*N_BUW-2,col="royalblue4")
+	points(-10,-2,pch=24,bg="royalblue4",cex=0.5)
+	
+	polygon(CUS_X*N_DBD-7,CUS_Y*N_DBD+6,col="royalblue4",density=40,border="black")
+
+	par(las=2,mfrow=c(2,2),fig=figure+c((figure[2]-figure[1])/2,0,0,-(figure[4]-figure[3])/2),new=T)
+	plot(10,-2,pch=25,bg="black",axes=F,xlab="",ylab="",xlim=c(-9,9)*1.293333,ylim=c(-5,5),asp=T,cex=0.5)
+
+	polygon(CUS_X*N_BDW+7,CUS_Y*N_BDW-2,col="royalblue4")
+	points(10,-2,pch=25,bg="royalblue4",cex=0.5)
+		
+	polygon(CUS_X*N_YUW+7,CUS_Y*N_YUW+2,col="khaki4")
+	points(10,2,pch=24,bg="khaki4",cex=0.5)	
+	
+	polygon(CUS_X*N_DBU+7,CUS_Y*N_DBU+6,col="khaki4",density=40,border="black")
+}
