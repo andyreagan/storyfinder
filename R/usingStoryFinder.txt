@@ -1,0 +1,16 @@
+(In the R environment)
+
+Making shifts:
+
+setwd("/Users/storyfinder/data/15.04.13/")
+source("/Users/storyfinder/code/R/allForNothing.R")
+allForNothing(0,"23.14_entropy.csv","Entropy","Boston Marathon",c(0,1,0,1))
+
+The storyFinder plot:
+
+source("/Users/storyfinder/code/R/storyFinder_newDiffs.R")
+storyFinder(0,"15.04.13","17","29")
+
+look for .pdf in:
+
+./data/15.04.13/17.29_0-storyFinder.pdf
