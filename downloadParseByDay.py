@@ -13,11 +13,10 @@ if __name__ == '__main__':
   import sys
   month = sys.argv[1]
   year = sys.argv[2]
-  ## make directory for day ##
 
   days_in_month = months[int(month)-1]
   from pydate import tidy
-  days = [tidy(day+1)+'.'+tidy(month)+'.'+tidy(year) for day in range(days_in_month)]
+  days = [tidy(day+1)+'.'+tidy(month)+'.'+tidy(year) for day in range(1,days_in_month)]
   
   print days
 
@@ -26,17 +25,14 @@ if __name__ == '__main__':
     import subprocess
     commanda = 'areagan@REDACTED_HOST:/users/c/d/cdanfort/scratch/twitter/tweet-troll/zipped-raw/'+day+'.tgz'
     commandb = '/Volumes/spaceHog/data'
-    print commanda+' '+commandb
     subprocess.call(['scp',commanda,commandb])
 
     # unzip
-    print 'tar -xvzf '+commandb+'/'+day+'.tgz'
-    subprocess.call(['tar','-xvzf',commandb+'/'+day+'.tgz'])
+    subprocess.call('cd /Volumes/spaceHog/data; tar -xvzf '+day+'.tgz',shell=True) # ['tar','-xvzf',commandb+'/'+day+'.tgz']
   
     # create a list of the jsons
     dataroot=commandb+'/'+day+'/'
     json_files = [dataroot + tmp for tmp in subprocess.Popen(['ls',dataroot],stdout = subprocess.PIPE, stderr = subprocess.STDOUT).communicate()[0].rstrip().split('\n')]
-    print json_files[0:5]
 
     # parse them to text
     import parse_from_to
@@ -48,4 +44,9 @@ if __name__ == '__main__':
       parse_from_to.parser(json_file,text_file)
 
     # delete json
-    subprocess.call(['\rm',dataroot+'*.json'])
+    command = '\\rm '+dataroot+'*.json'
+    print command
+    subprocess.call(command,shell=True)
+    command = '\\rm '+ commandb + '/' + day + '.tgz'
+    print command
+    subprocess.call(command,shell=True)
