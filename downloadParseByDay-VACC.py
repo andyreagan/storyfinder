@@ -14,7 +14,7 @@ if __name__ == '__main__':
   # download first
   import subprocess
   commanda = '/users/c/d/cdanfort/scratch/twitter/tweet-troll/zipped-raw/'+day+'.tgz'
-  commandb = '/users/a/r/areagan/2013/projects/storyfinder/tmp'
+  commandb = '/users/a/r/areagan/scratch/tmp'
   subprocess.call(['cp',commanda,commandb])
 
   # unzip
