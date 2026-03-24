@@ -1,0 +1,12 @@
+make-plos-pieces.pl wordhappiness-revtex4
+latex plos-wordhappiness
+bibtex plos-wordhappiness
+latex plos-wordhappiness
+latex plos-wordhappiness
+dvipdf plos-wordhappiness
+
+open -a preview;
+
+make-single-latex-file-plos.pl plos-wordhappiness.tex
+makelinks-plos.pl plos-wordhappiness-combined.tex
+makeplospackage

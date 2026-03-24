@@ -1,0 +1,36 @@
+# push material up
+git add *
+git add *.tex *.pdf
+git commit -m "comment"
+git push -u origin master
+
+
+
+
+git init
+
+# start up
+git add *.tex
+git commit -m "comment"
+(e.g. git commit -m "first commit")
+git remote add origin https://github.com/computationalstorylab/2013-07storyfinder.git
+git push -u origin master
+
+
+
+
+
+# save local stuff if there are conflicts
+git stash
+git pull origin master
+
+# force overwrite of local files
+git fetch --all
+git reset --hard origin/master
+
+# do the right thing:
+git config --global core.editor emacs
+
+
+# 
+git pull origin master

@@ -1,0 +1,3 @@
+echo 'creating wordhappiness-arxiv.tgz...';
+cd package;
+tar cvfzph ../wordhappiness-arxiv.tgz fig[0-9]*.pdf *revtex4-combined.tex;

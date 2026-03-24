@@ -1,0 +1,53 @@
+This is BibTeX, Version 0.99d (TeX Live 2011/Fink)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: storyfinder-revtex4.aux
+The style file: apsrev.bst
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Database file #1: most-everything-peter-dodds.bib
+Database file #2: storyfinder.bib
+Warning--I didn't find a database entry for "williams-partitioner"
+Warning--I didn't find a database entry for "desu-ambient"
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+You've used 1 entry,
+            3411 wiz_defined-function locations,
+            1164 strings with 10449 characters,
+and the built_in function-call counts, 990 in all, are:
+= -- 50
+> -- 41
+< -- 5
++ -- 36
+- -- 10
+* -- 140
+:= -- 101
+add.period$ -- 1
+call.type$ -- 1
+change.case$ -- 5
+chr.to.int$ -- 1
+cite$ -- 1
+duplicate$ -- 82
+empty$ -- 74
+format.name$ -- 23
+if$ -- 178
+int.to.chr$ -- 1
+int.to.str$ -- 2
+missing$ -- 13
+newline$ -- 18
+num.names$ -- 3
+pop$ -- 19
+preamble$ -- 1
+purify$ -- 4
+quote$ -- 0
+skip$ -- 37
+stack$ -- 0
+substring$ -- 32
+swap$ -- 72
+text.length$ -- 5
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 6
+warning$ -- 0
+while$ -- 3
+width$ -- 0
+write$ -- 25
+(There were 2 warnings)

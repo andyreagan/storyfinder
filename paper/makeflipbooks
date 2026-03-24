@@ -1,0 +1,10 @@
+combinepdfs \ 
+figures/2013-05many-languages-happiness/fighappinessdist_jellyfish_words_havg_multilanguage001_00[1-9]_*_*_noname.pdf \
+figures/2013-05many-languages-happiness/fighappinessdist_jellyfish_words_havg_multilanguage001_012_*_*_noname.pdf \
+flipbooks-jellyfish-havg.pdf
+
+combinepdfs \ 
+figures/2013-05many-languages-happiness/fighappinessdist_jellyfish_words_hstd_multilanguage001_00[1-9]_*_*_noname.pdf \
+figures/2013-05many-languages-happiness/fighappinessdist_jellyfish_words_hstd_multilanguage001_012_*_*_noname.pdf \
+flipbooks-jellyfish-hstd.pdf
+

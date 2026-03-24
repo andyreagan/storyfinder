@@ -1,0 +1,27 @@
+\begin{thebibliography}{1}
+\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+\expandafter\ifx\csname bibnamefont\endcsname\relax
+  \def\bibnamefont#1{#1}\fi
+\expandafter\ifx\csname bibfnamefont\endcsname\relax
+  \def\bibfnamefont#1{#1}\fi
+\expandafter\ifx\csname citenamefont\endcsname\relax
+  \def\citenamefont#1{#1}\fi
+\expandafter\ifx\csname url\endcsname\relax
+  \def\url#1{\texttt{#1}}\fi
+\expandafter\ifx\csname urlprefix\endcsname\relax\def\urlprefix{URL }\fi
+\providecommand{\bibinfo}[2]{#2}
+\providecommand{\eprint}[2][]{\url{#2}}
+
+\bibitem[{\citenamefont{Dodds et~al.}(2011)\citenamefont{Dodds, Harris,
+  Kloumann, Bliss, and Danforth}}]{dodds2011e}
+\bibinfo{author}{\bibfnamefont{P.~S.} \bibnamefont{Dodds}},
+  \bibinfo{author}{\bibfnamefont{K.~D.} \bibnamefont{Harris}},
+  \bibinfo{author}{\bibfnamefont{I.~M.} \bibnamefont{Kloumann}},
+  \bibinfo{author}{\bibfnamefont{C.~A.} \bibnamefont{Bliss}}, \bibnamefont{and}
+  \bibinfo{author}{\bibfnamefont{C.~M.} \bibnamefont{Danforth}},
+  \bibinfo{journal}{PLoS ONE} \textbf{\bibinfo{volume}{6}},
+  \bibinfo{pages}{e26752} (\bibinfo{year}{2011}), \bibinfo{note}{draft version
+  available at \url{http://arxiv.org/abs/1101.5120v4}. Accessed October 24,
+  2011}.
+
+\end{thebibliography}
